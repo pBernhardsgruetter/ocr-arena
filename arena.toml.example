@@ -1,0 +1,29 @@
+# Copy to arena.toml. Secrets are read from environment variables, never stored here.
+
+[timeouts]
+base_s = 120       # per document
+per_page_s = 30    # added per page
+
+# --- Leaderboard #1: KDL-Frontier-Parser-nano, served with vLLM on a GPU box ---
+#   vllm serve KDLAI/KDL-Frontier-Parser-nano --trust-remote-code \
+#       --limit-mm-per-prompt '{"image":1}' --max-model-len 8192
+[engines.kdl_frontier_nano]
+type = "kdl_vllm"
+base_url = "http://GPU-HOST:8000/v1"
+model = "KDLAI/KDL-Frontier-Parser-nano"
+concurrency = 8
+
+# --- Any OpenAI-compatible vision LLM (the hallucination-prone class) ---
+[engines.vlm_generic]
+type = "openai_vlm"
+label = "Vision LLM"
+base_url = "https://api.example.com/v1"
+model = "your-model-id"
+api_key_env = "VLM_API_KEY"
+price_in_per_m = 0.5     # USD per 1M input tokens
+price_out_per_m = 1.5    # USD per 1M output tokens
+concurrency = 4
+
+# --- EasyOCR / PaddleOCR behind liteparse (start the servers from liteparse/ocr/) ---
+# [engines.liteparse_easyocr]
+# url = "http://localhost:8828/ocr"

@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OCR Arena Report</title>
+<style>
+:root{
+  --bg:#f6f5f1; --surface:#ffffff; --ink:#1d2127; --muted:#69707a; --line:#e3e1d9; --accent:#1f5eff;
+  --good:#1e8e5a; --bad:#c8352b; --warn:#b7791f; --ctrl:#8a8f98;
+  --ins:#fbd5d1; --del:#fdeeb8; --rep:#ffd9b0; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14161a; --surface:#1d2026; --ink:#e8eaed; --muted:#98a0ab; --line:#2b2f37; --accent:#6c96ff;
+  --good:#46c28a; --bad:#ff6b5e; --warn:#e0a94a; --ctrl:#7c828c;
+  --ins:#5a2a27; --del:#5a4a1b; --rep:#5c3a17;}}
+:root[data-theme="dark"]{
+  --bg:#14161a; --surface:#1d2026; --ink:#e8eaed; --muted:#98a0ab; --line:#2b2f37; --accent:#6c96ff;
+  --good:#46c28a; --bad:#ff6b5e; --warn:#e0a94a; --ctrl:#7c828c; --ins:#5a2a27; --del:#5a4a1b; --rep:#5c3a17;}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px 80px}
+header{padding:36px 0 12px;display:flex;gap:16px;align-items:flex-end;justify-content:space-between;flex-wrap:wrap}
+h1{margin:0;font-size:28px;letter-spacing:-.02em}
+h2{font-size:19px;margin:44px 0 6px;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:13.5px}
+.lead{color:var(--muted);margin:0 0 14px;max-width:80ch}
+.theme{background:var(--surface);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 10px;cursor:pointer}
+.banner{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--warn);border-radius:8px;padding:12px 16px;margin:14px 0;font-size:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:16px 0}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.card .v{font-size:22px;font-weight:650;margin:4px 0 2px}
+.card .d{font-size:13px;color:var(--muted)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:8px 10px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th:first-child,td:first-child{text-align:left}
+th{font-size:12px;color:var(--muted);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--surface)}
+th.sorted::after{content:" ▲"} th.sorted.desc::after{content:" ▼"}
+tr.ctrl td{color:var(--ctrl)} tr.ctrl td:first-child{font-style:italic}
+td.cell{border-radius:6px}
+.tag{font-size:10.5px;border:1px solid var(--line);border-radius:99px;padding:1px 7px;margin-left:6px;color:var(--muted)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:900px){.row{grid-template-columns:1fr}}
+svg text{fill:var(--ink);font:12px system-ui,sans-serif} svg .m{fill:var(--muted)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted);margin:6px 0 2px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+select,button.pg{background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font:inherit}
+button.pg.on{border-color:var(--accent);color:var(--accent)}
+.diff{display:grid;grid-template-columns:240px 1fr;gap:16px}
+@media(max-width:800px){.diff{grid-template-columns:1fr}}
+.diff img{width:100%;border:1px solid var(--line);border-radius:6px}
+.text{font:13px/1.7 var(--mono);white-space:pre-wrap;word-break:break-word}
+.dxi{background:var(--ins);border-radius:3px;padding:0 2px}
+.dxd{background:var(--del);border-radius:3px;padding:0 2px;text-decoration:line-through}
+.dxr{background:var(--rep);border-radius:3px;padding:0 2px}
+.skip{display:grid;grid-template-columns:260px 1fr;gap:4px 14px;font-size:13.5px}
+.skip .n{font-weight:600} .skip .w{color:var(--muted)}
+code{font-family:var(--mono);font-size:12.5px;background:var(--bg);padding:1px 5px;border-radius:4px}
+ul.m{margin:6px 0;padding-left:20px} ul.m li{margin:4px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <h1>OCR Arena</h1>
+    <div class="sub" id="meta"></div>
+  </div>
+  <button class="theme" id="theme" title="Toggle light/dark">Theme</button>
+</header>
+
+<div class="banner" id="caveat"><b>Read this first.</b> The corpus is <b>synthetic</b>: exact ground truth, but scans and "handwriting" are simulated (script font with per-glyph jitter). Use the results as a <i>relative</i> ranking. Real customer scans will score worse for every engine. Drop real, annotated documents into <code>corpus/</code> to re-run.</div>
+
+<section>
+  <h2>Verdict</h2>
+  <p class="lead">Chosen among engines that actually read the pages (CER &lt; 50%), controls excluded.</p>
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <h2>Leaderboard</h2>
+  <p class="lead">Averaged over document profiles (each profile counts equally, so one long document cannot dominate). Click a column to sort. Cell tint: green = good, red = bad. Greyed italic rows are <b>controls</b>, not real engines: they prove the metrics work.</p>
+  <div class="panel"><table id="board"></table></div>
+</section>
+
+<section>
+  <h2>Where the errors come from</h2>
+  <p class="lead">For the customer, <b>fabricated text</b> and <b>wrong numbers</b> are worse than garbled words: a garbled word is visibly wrong, a plausible wrong number is not.</p>
+  <div class="row">
+    <div class="panel"><b>Token outcomes</b><div class="legend" id="lg1"></div><div id="ch1"></div></div>
+    <div class="panel"><b>Accuracy vs. speed</b> <span class="sub">(CPU, seconds per page, log scale)</span><div id="ch2"></div></div>
+  </div>
+</section>
+
+<section>
+  <h2>By document profile</h2>
+  <div class="controls"><label>Metric <select id="hm"></select></label></div>
+  <div class="panel"><table id="heat"></table></div>
+</section>
+
+<section>
+  <h2>Scaling to a 500-page document</h2>
+  <p class="lead">Extrapolated from the long synthetic document on this machine (single run, CPU). API engines show cost per 1,000 pages instead.</p>
+  <div class="panel"><table id="scale"></table></div>
+</section>
+
+<section>
+  <h2>Look at the pages</h2>
+  <p class="lead">Ground truth vs. engine output. <span class="dxd">omitted</span> <span class="dxi">extra / fabricated</span> <span class="dxr">misread (hover for truth)</span>. Shows each document's first page and its worst page per engine.</p>
+  <div class="controls">
+    <label>Engine <select id="de"></select></label>
+    <label>Document <select id="dd"></select></label>
+    <span id="dp"></span>
+  </div>
+  <div class="panel"><div class="diff"><div><img id="dimg" alt="scanned page"></div><div><div class="sub" id="dinfo"></div><div class="text" id="dtext"></div></div></div></div>
+</section>
+
+<section>
+  <h2>Not run</h2>
+  <p class="lead">These engines are wired in but unavailable on this machine. Configure them in <code>arena.toml</code> (see README) and re-run <code>arena run</code>.</p>
+  <div class="panel"><div class="skip" id="skipped"></div></div>
+</section>
+
+<section>
+  <h2>Method</h2>
+  <div class="panel"><ul class="m">
+    <li><b>Corpus:</b> seeded synthetic German/English business pages (letters, tables, photos, handwritten form fields), rasterised to image-only PDFs with no text layer; profiles differ in scan quality. Ground truth is exact.</li>
+    <li><b>CER / WER:</b> Levenshtein distance over characters / whitespace tokens after Unicode and Markdown normalisation (table pipes, headings and escapes are not penalised).</li>
+    <li><b>Hallucination:</b> output tokens aligned to the truth. An <i>inserted</i> token, or a replacement that is not similar to the truth token (fuzzy ratio &lt; 60), counts as fabricated. Similar-but-wrong tokens are <i>misreads</i> (ordinary OCR errors). Missing tokens are <i>omissions</i>. Rate = fabricated / output tokens.</li>
+    <li><b>Wrong numbers:</b> numeric tokens in the output that do not exist on the page. <b>Near-misses</b> differ from a real number by ≤ 2 characters (e.g. swapped digits): plausible-looking and the most dangerous.</li>
+    <li><b>Handwriting found:</b> best fuzzy window match of each handwritten field anywhere in the output (output has no regions), 100% = verbatim.</li>
+    <li><b>Table F1:</b> cell-level F1 after matching rows; a ParseBench-style subset, not the official scorer. <b>Reading order:</b> share of paragraph pairs in correct order.</li>
+    <li><b>Speed:</b> wall-clock per document in an isolated process, one engine at a time, single run. Peak memory is the process maximum RSS.</li>
+    <li><b>Limits:</b> noise-garbled tokens can count as "fabricated" on very bad scans, so compare engines on the same profile. Synthetic handwriting is easier than real handwriting.</li>
+  </ul></div>
+</section>
+</div>
+
+<script>
+const D = /*__DATA__*/null;
+const $ = s => document.querySelector(s);
+const h = (t, a = {}, ...kids) => { const e = document.createElement(t);
+  for (const [k, v] of Object.entries(a)) { if (k === 'class') e.className = v; else if (k === 'style') e.style.cssText = v; else if (k.startsWith('on')) e[k] = v; else e.setAttribute(k, v); }
+  for (const c of kids.flat()) e.append(c instanceof Node ? c : document.createTextNode(c ?? '')); return e; };
+const NS = 'http://www.w3.org/2000/svg';
+const sv = (t, a = {}, ...kids) => { const e = document.createElementNS(NS, t); for (const [k, v] of Object.entries(a)) e.setAttribute(k, v); for (const c of kids.flat()) e.append(c instanceof Node ? c : document.createTextNode(c)); return e; };
+const pct = v => v == null ? '–' : (v * 100).toFixed(1) + '%';
+const num = v => v == null ? '–' : String(v);
+const dur = s => s == null ? '–' : s < 90 ? s.toFixed(0) + ' s' : s < 5400 ? (s / 60).toFixed(0) + ' min' : (s / 3600).toFixed(1) + ' h';
+const usd = v => v == null ? '–' : '$' + v.toFixed(2);
+const sp = v => v == null ? '–' : v < 0.1 ? v.toFixed(3) + ' s' : v.toFixed(2) + ' s';
+const heat = (v, lo, hi, goodLow) => { if (v == null) return ''; let t = Math.max(0, Math.min(1, (v - lo) / (hi - lo))); if (!goodLow) t = 1 - t;
+  return `background:hsla(${Math.round(140 * (1 - t))},62%,46%,.24)`; };
+
+// theme
+$('#theme').onclick = () => { const r = document.documentElement; const dark = matchMedia('(prefers-color-scheme: dark)').matches;
+  const cur = r.dataset.theme || (dark ? 'dark' : 'light'); r.dataset.theme = cur === 'dark' ? 'light' : 'dark'; };
+
+const m = D.meta;
+$('#meta').textContent = `${m.date} · ${m.cpu} (${m.cores} threads, ${m.ram}) · GPU: ${m.gpu} · liteparse ${m.liteparse} · ${D.docs.length} docs, ${D.docs.reduce((a, d) => a + d.n_pages, 0)} pages`;
+
+const E = Object.fromEntries(D.engines.map(e => [e.name, e]));
+const ran = D.engines.filter(e => D.summary[e.name]);
+const real = ran.filter(e => e.kind !== 'control');
+const readers = real.filter(e => D.summary[e.name].overall.cer < 0.5);
+const S = n => D.summary[n].overall;
+
+// verdict cards
+function card(k, best, valFn, descFn) { if (!best) return;
+  $('#cards').append(h('div', { class: 'card' }, h('div', { class: 'k' }, k), h('div', { class: 'v' }, best.label), h('div', { class: 'd' }, valFn(S(best.name)), ' · ', descFn || ''))); }
+const minBy = (xs, f) => xs.reduce((a, b) => (a == null || f(b) < f(a)) ? b : a, null);
+card('Most accurate', minBy(readers, e => S(e.name).cer), s => `CER ${pct(s.cer)}`, 'lowest character error rate');
+card('Fewest fabrications', minBy(readers, e => S(e.name).halluc_rate), s => `${pct(s.halluc_rate)} fabricated tokens`, 'lowest hallucination rate');
+card('Fewest wrong numbers', minBy(readers, e => S(e.name).numeric_error_rate), s => `${pct(s.numeric_error_rate)} of numbers wrong`, 'lowest numeric error rate');
+card('Fastest', minBy(readers, e => S(e.name).sec_per_page), s => `${sp(s.sec_per_page)} / page`, 'among engines that read the pages');
+const skipped = D.engines.filter(e => !e.available && !e.ran).length;
+$('#cards').append(h('div', { class: 'card' }, h('div', { class: 'k' }, 'Not yet benchmarked'), h('div', { class: 'v' }, skipped + ' engines'), h('div', { class: 'd' }, 'GPU / cloud adapters waiting for an endpoint (see bottom)')));
+
+// leaderboard
+const cols = [
+  { k: 'cer', l: 'CER', t: 'Character error rate', f: pct, lo: 0, hi: .35, gl: true },
+  { k: 'wer', l: 'WER', t: 'Word error rate', f: pct, lo: 0, hi: .45, gl: true },
+  { k: 'halluc_rate', l: 'Fabricated', t: 'Output tokens not on the page', f: pct, lo: 0, hi: .12, gl: true },
+  { k: 'omission_rate', l: 'Omitted', t: 'Reference tokens missing from the output', f: pct, lo: 0, hi: .15, gl: true },
+  { k: 'numeric_error_rate', l: 'Wrong numbers', t: 'Numeric tokens that are not on the page', f: pct, lo: 0, hi: .15, gl: true },
+  { k: 'numeric_near_miss', l: 'Digit near-misses', t: 'Wrong numbers within 2 characters of a real one', f: num },
+  { k: 'handwriting', l: 'Handwriting', t: 'Handwritten fields found in output', f: pct, lo: .4, hi: 1, gl: false },
+  { k: 'table_f1', l: 'Table F1', t: 'Table cell F1', f: pct, lo: .2, hi: 1, gl: false },
+  { k: 'sec_per_page', l: 'Sec / page', t: 'Wall-clock per page', f: sp },
+  { k: 'cost_per_1k_pages', l: '$ / 1k pages', t: 'API cost', f: usd },
+  { k: 'failures', l: 'Failed docs', t: 'Timeouts / errors', f: num },
+];
+let sortK = 'cer', sortDesc = false;
+function board() {
+  const t = $('#board'); t.replaceChildren();
+  const rows = [...ran].sort((a, b) => { const x = S(a.name)[sortK] ?? Infinity, y = S(b.name)[sortK] ?? Infinity; return (sortDesc ? -1 : 1) * (x - y); });
+  t.append(h('tr', {}, h('th', {}, 'Engine'), ...cols.map(c => h('th', { title: c.t, class: sortK === c.k ? 'sorted' + (sortDesc ? ' desc' : '') : '', onclick: () => { sortDesc = sortK === c.k ? !sortDesc : false; sortK = c.k; board(); } }, c.l))));
+  for (const e of rows) { const s = S(e.name);
+    t.append(h('tr', { class: e.kind === 'control' ? 'ctrl' : '' }, h('td', { title: e.notes }, e.label, e.kind === 'control' ? h('span', { class: 'tag' }, 'control') : e.kind === 'api' ? h('span', { class: 'tag' }, 'API') : ''),
+      ...cols.map(c => h('td', { class: 'cell', style: c.lo != null && e.kind !== 'control' ? heat(s[c.k], c.lo, c.hi, c.gl) : '' }, c.f(s[c.k])))));
+  }
+}
+board();
+
+// chart 1: token outcomes stacked (share of reference tokens: omitted, misread; and fabricated relative to ref)
+const C = { fab: 'var(--bad)', mis: 'var(--warn)', om: '#8c6bd6' };
+$('#lg1').append(...[['Fabricated', C.fab], ['Misread', C.mis], ['Omitted', C.om]].map(([n, c]) => h('span', {}, h('span', { class: 'sw', style: `background:${c}` }), n)));
+(function () {
+  const rows = ran.filter(e => e.name !== 'liteparse_noocr'); const W = 620, rh = 30, L = 250, H = rows.length * rh + 24;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%' });
+  const mx = Math.max(.05, ...rows.map(e => { const c = S(e.name).counts, r = c.ref_tokens || 1; return (c.hallucinated + c.misread + c.omitted) / r; }));
+  rows.forEach((e, i) => { const c = S(e.name).counts, r = c.ref_tokens || 1; let x = L; const y = i * rh + 6;
+    svg.append(sv('text', { x: L - 8, y: y + 15, 'text-anchor': 'end', class: e.kind === 'control' ? 'm' : '' }, e.label.length > 40 ? e.label.slice(0, 39) + '…' : e.label));
+    for (const [v, col] of [[c.hallucinated, C.fab], [c.misread, C.mis], [c.omitted, C.om]]) { const w = (v / r) / mx * (W - L - 50);
+      svg.append(sv('rect', { x, y, width: Math.max(w, 0), height: 20, fill: col, rx: 3 })); x += w; }
+    svg.append(sv('text', { x: x + 6, y: y + 15, class: 'm' }, pct((c.hallucinated + c.misread + c.omitted) / r)));
+  });
+  $('#ch1').append(svg);
+})();
+
+// chart 2: scatter accuracy vs speed
+(function () {
+  const pts = real.filter(e => e.name !== 'liteparse_noocr').map(e => ({ e, x: Math.max(S(e.name).sec_per_page, 0.005), y: (1 - S(e.name).cer) * 100 }));
+  if (!pts.length) return;
+  const W = 560, H = 330, L = 50, B = 38, T = 14, R = 20;
+  const xs = pts.map(p => p.x), lo = Math.log10(Math.min(...xs) / 1.6), hi = Math.log10(Math.max(...xs) * 1.8);
+  const ys = pts.map(p => p.y), y0 = Math.floor(Math.min(...ys, 90) / 10) * 10, y1 = 100;
+  const X = v => L + (Math.log10(v) - lo) / (hi - lo) * (W - L - R), Y = v => T + (1 - (v - y0) / (y1 - y0)) * (H - T - B);
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%' });
+  for (let v = y0; v <= y1; v += 10) { svg.append(sv('line', { x1: L, x2: W - R, y1: Y(v), y2: Y(v), stroke: 'var(--line)' })); svg.append(sv('text', { x: L - 8, y: Y(v) + 4, 'text-anchor': 'end', class: 'm' }, v + '%')); }
+  for (let d = Math.floor(lo) - 1; d <= Math.ceil(hi); d++) for (const k of [1, 2, 5]) { const v = k * 10 ** d; if (Math.log10(v) < lo || Math.log10(v) > hi) continue;
+    svg.append(sv('line', { x1: X(v), x2: X(v), y1: T, y2: H - B, stroke: 'var(--line)' })); svg.append(sv('text', { x: X(v), y: H - B + 16, 'text-anchor': 'middle', class: 'm' }, +v.toPrecision(2) + ' s')); }
+  svg.append(sv('text', { x: (W + L) / 2, y: H - 4, 'text-anchor': 'middle', class: 'm' }, 'seconds per page (log) →  faster is left'));
+  svg.append(sv('text', { x: 12, y: 12, class: 'm' }, 'accuracy (1 − CER) ↑'));
+  pts.forEach((p, i) => { svg.append(sv('circle', { cx: X(p.x), cy: Y(p.y), r: 7, fill: p.e.kind === 'api' ? 'var(--warn)' : 'var(--accent)', 'fill-opacity': .85 }, sv('title', {}, `${p.e.label}\nCER ${pct(1 - p.y / 100)} · ${sp(p.x)}/page`)));
+    svg.append(sv('text', { x: X(p.x) + 10, y: Y(p.y) + 4 }, p.e.label.replace('LiteParse + Tesseract', 'LiteParse'))); });
+  $('#ch2').append(svg);
+})();
+
+// heatmap
+const hmOpts = [['cer', 'CER', true, 0, .4], ['halluc_rate', 'Fabricated tokens', true, 0, .15], ['omission_rate', 'Omitted tokens', true, 0, .2], ['numeric_error_rate', 'Wrong numbers', true, 0, .2], ['handwriting', 'Handwriting found', false, .4, 1], ['table_f1', 'Table F1', false, .2, 1], ['reading_order', 'Reading order', false, .6, 1]];
+hmOpts.forEach(o => $('#hm').append(h('option', { value: o[0] }, o[1])));
+function heatmap() { const [k, , gl, lo, hi] = hmOpts.find(o => o[0] === $('#hm').value); const t = $('#heat'); t.replaceChildren();
+  t.append(h('tr', {}, h('th', {}, 'Engine'), ...D.profiles.map(p => h('th', {}, p))));
+  for (const e of ran) t.append(h('tr', { class: e.kind === 'control' ? 'ctrl' : '' }, h('td', {}, e.label), ...D.profiles.map(p => { const v = D.summary[e.name].profiles[p]?.[k]; return h('td', { class: 'cell', style: e.kind === 'control' ? '' : heat(v, lo, hi, gl) }, pct(v)); }))); }
+$('#hm').onchange = heatmap; heatmap();
+
+// scale
+(function () { const t = $('#scale');
+  t.append(h('tr', {}, h('th', {}, 'Engine'), h('th', {}, 'Sec / page'), h('th', {}, '500 pages'), h('th', {}, '$ / 1k pages'), h('th', {}, 'Peak RAM'), h('th', {}, 'Failed docs')));
+  for (const e of real) { const s = S(e.name), spp = s.sec_per_page_long ?? s.sec_per_page;
+    t.append(h('tr', {}, h('td', {}, e.label), h('td', {}, sp(spp)), h('td', {}, dur(spp * 500)), h('td', {}, usd(s.cost_per_1k_pages)), h('td', {}, Math.round(s.max_rss_mb) + ' MB'), h('td', {}, num(s.failures)))); } })();
+
+// diff viewer
+const dEng = $('#de'), dDoc = $('#dd');
+[...new Set(D.diffs.map(d => d.engine))].forEach(n => dEng.append(h('option', { value: n }, E[n].label)));
+function fillDocs() { dDoc.replaceChildren(); [...new Set(D.diffs.filter(d => d.engine === dEng.value).map(d => d.doc))].forEach(n => dDoc.append(h('option', { value: n }, n))); fillPages(); }
+function fillPages() { const ps = D.diffs.filter(d => d.engine === dEng.value && d.doc === dDoc.value); $('#dp').replaceChildren(...ps.map((p, i) => h('button', { class: 'pg', onclick: () => show(p) }, `page ${p.page} (CER ${pct(p.cer)})`))); if (ps.length) show(ps[ps.length - 1]); }
+function show(p) { [...$('#dp').children].forEach(b => b.classList.toggle('on', b.textContent.startsWith('page ' + p.page + ' ')));
+  $('#dimg').src = D.thumbs[p.thumb]; $('#dinfo').textContent = `${E[p.engine].label} · ${p.doc} · page ${p.page}`;
+  const box = $('#dtext'); box.replaceChildren();
+  for (const [tag, a, b] of p.seg) { if (tag === 'e') box.append(a + ' '); else if (tag === 'd') box.append(h('span', { class: 'dxd' }, a), ' '); else if (tag === 'i') box.append(h('span', { class: 'dxi' }, b), ' '); else box.append(h('span', { class: 'dxr', title: 'truth: ' + a }, b), ' '); } }
+dEng.onchange = fillDocs; dDoc.onchange = fillPages; if (D.diffs.length) fillDocs();
+
+// skipped
+for (const e of D.engines.filter(e => !e.available && !e.ran)) $('#skipped').append(h('div', { class: 'n' }, e.label), h('div', { class: 'w' }, e.reason + (e.notes ? ' — ' + e.notes : '')));
+if (!$('#skipped').children.length) $('#skipped').textContent = 'All wired-in engines ran.';
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+.venv/
+corpus/
+results/
+arena.toml
+__pycache__/
+.pytest_cache/
