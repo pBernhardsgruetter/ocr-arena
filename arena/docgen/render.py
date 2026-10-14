@@ -10,10 +10,10 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 
 FONT_DIRS = ["/usr/share/fonts/opentype/urw-base35", "/usr/share/fonts/truetype/dejavu",
              "/usr/share/fonts/opentype/tlwg", "/usr/share/fonts/opentype/comic-neue",
-             "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/opentype/freefont"]
-PRINTED = ["NimbusSans-Regular.otf", "C059-Roman.otf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf"]
-PRINTED_BOLD = ["NimbusSans-Bold.otf", "C059-Bold.otf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf"]
-HAND = ["Z003-MediumItalic.otf", "Purisa.otf", "ComicNeue-Italic.otf"]
+             "/usr/share/fonts/truetype/liberation", "/usr/share/fonts/opentype/freefont", "C:/Windows/Fonts"]
+PRINTED = ["NimbusSans-Regular.otf", "C059-Roman.otf", "DejaVuSans.ttf", "LiberationSans-Regular.ttf", "arial.ttf"]
+PRINTED_BOLD = ["NimbusSans-Bold.otf", "C059-Bold.otf", "DejaVuSans-Bold.ttf", "LiberationSans-Bold.ttf", "arialbd.ttf"]
+HAND = ["Z003-MediumItalic.otf", "Purisa.otf", "ComicNeue-Italic.otf", "Inkfree.ttf", "segoepr.ttf"]
 BASE_DPI = 200
 A4 = (int(8.27 * BASE_DPI), int(11.69 * BASE_DPI))
 

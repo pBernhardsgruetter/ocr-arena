@@ -91,7 +91,7 @@ ul.m{margin:6px 0;padding-left:20px} ul.m li{margin:4px 0}
   <p class="lead">For the customer, <b>fabricated text</b> and <b>wrong numbers</b> are worse than garbled words: a garbled word is visibly wrong, a plausible wrong number is not.</p>
   <div class="row">
     <div class="panel"><b>Token outcomes</b><div class="legend" id="lg1"></div><div id="ch1"></div></div>
-    <div class="panel"><b>Accuracy vs. speed</b> <span class="sub">(CPU, seconds per page, log scale)</span><div id="ch2"></div></div>
+    <div class="panel"><b>Accuracy vs. speed</b> <span class="sub">(seconds per page, log scale; KDL runs on the GPU, the rest on CPU)</span><div id="ch2"></div></div>
   </div>
 </section>
 
@@ -103,7 +103,8 @@ ul.m{margin:6px 0;padding-left:20px} ul.m li{margin:4px 0}
 
 <section>
   <h2>Scaling to a 500-page document</h2>
-  <p class="lead">Extrapolated from the long synthetic document on this machine (single run, CPU). API engines show cost per 1,000 pages instead.</p>
+  <p class="lead">Extrapolated from the long synthetic document on this machine (single run; KDL on the GPU via vLLM, the rest on CPU). API engines show cost per 1,000 pages instead.</p>
+  <p class="lead">OpenRouter cross-check: the three OpenRouter engines (GPT-6 Luna, DeepSeek V4.1 Flash, MiMo-V2.6-Pro) were billed <b>$0.47</b> in total for the whole benchmark including smoke tests (364 requests, 1.15M tokens, 1.2% cache hits; source: OpenRouter Activity page). The $ / 1k pages column is computed from token usage and list prices and comes out about 8% higher ($0.51 total). Reasoning tokens are billed as output tokens.</p>
   <div class="panel"><table id="scale"></table></div>
 </section>
 
@@ -177,7 +178,7 @@ card('Fewest fabrications', minBy(readers, e => S(e.name).halluc_rate), s => `${
 card('Fewest wrong numbers', minBy(readers, e => S(e.name).numeric_error_rate), s => `${pct(s.numeric_error_rate)} of numbers wrong`, 'lowest numeric error rate');
 card('Fastest', minBy(readers, e => S(e.name).sec_per_page), s => `${sp(s.sec_per_page)} / page`, 'among engines that read the pages');
 const skipped = D.engines.filter(e => !e.available && !e.ran).length;
-$('#cards').append(h('div', { class: 'card' }, h('div', { class: 'k' }, 'Not yet benchmarked'), h('div', { class: 'v' }, skipped + ' engines'), h('div', { class: 'd' }, 'GPU / cloud adapters waiting for an endpoint (see bottom)')));
+$('#cards').append(h('div', { class: 'card' }, h('div', { class: 'k' }, 'Not yet benchmarked'), h('div', { class: 'v' }, skipped + ' engines'), h('div', { class: 'd' }, 'engines needing a cloud endpoint or extra OCR servers (see bottom)')));
 
 // leaderboard
 const cols = [

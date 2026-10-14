@@ -32,19 +32,44 @@ def _run_cell(engine: str, doc: dict, out: Path, timeout: float) -> dict:
     tmp = out.with_suffix(".tmp")
     cmd = [sys.executable, "-W", "ignore", "-m", "arena.worker", engine, doc["pdf"], str(tmp), str(doc["n_pages"])]
     t0 = time.perf_counter()
-    p = subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, start_new_session=True)
+    posix = hasattr(os, "wait4")
+    p = subprocess.Popen(cmd, cwd=ROOT, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, start_new_session=posix)
     status, rss = "ok", 0.0
-    while True:
-        pid, st, ru = os.wait4(p.pid, os.WNOHANG)
-        if pid:
-            rss = ru.ru_maxrss / 1024  # KiB -> MiB (Linux)
-            break
-        if time.perf_counter() - t0 > timeout:
-            os.killpg(p.pid, signal.SIGKILL)
-            os.wait4(p.pid, 0)
-            status = "timeout"
-            break
-        time.sleep(0.2)
+    if posix:
+        while True:
+            pid, st, ru = os.wait4(p.pid, os.WNOHANG)
+            if pid:
+                rss = ru.ru_maxrss / 1024  # KiB -> MiB (Linux)
+                break
+            if time.perf_counter() - t0 > timeout:
+                os.killpg(p.pid, signal.SIGKILL)
+                os.wait4(p.pid, 0)
+                status = "timeout"
+                break
+            time.sleep(0.2)
+    else:  # Windows: poll, sample peak RSS of the process tree via psutil
+        import psutil
+        try:
+            ps = psutil.Process(p.pid)
+        except psutil.Error:
+            ps = None
+        while p.poll() is None:
+            if ps:
+                try:
+                    cur = sum(q.memory_info().rss for q in [ps, *ps.children(recursive=True)]) / 2**20
+                    rss = max(rss, cur)
+                except psutil.Error:
+                    pass
+            if time.perf_counter() - t0 > timeout:
+                for q in [*(ps.children(recursive=True) if ps else []), ps]:
+                    try:
+                        q.kill()
+                    except Exception:
+                        pass
+                p.wait()
+                status = "timeout"
+                break
+            time.sleep(0.2)
     wall = time.perf_counter() - t0
     if status == "ok" and tmp.exists():
         rec = json.loads(tmp.read_text())
@@ -93,10 +118,26 @@ def system_info() -> dict:
         mem = f"{int(open('/proc/meminfo').readline().split()[1]) / 1048576:.0f} GB"
     except Exception:  # noqa: BLE001
         pass
+    if cpu == "?":
+        cpu = platform.processor() or "?"
+    if mem == "?":
+        try:
+            import psutil
+            mem = f"{psutil.virtual_memory().total / 2**30:.0f} GB"
+        except Exception:  # noqa: BLE001
+            pass
+    gpu = "none"
+    try:
+        out = subprocess.run(["nvidia-smi", "--query-gpu=name,memory.total", "--format=csv,noheader"],
+                             capture_output=True, text=True, timeout=10).stdout.strip()
+        if out:
+            gpu = out.splitlines()[0].replace(", ", " / ")
+    except Exception:  # noqa: BLE001
+        pass
     try:
         from importlib.metadata import version
         lp = version("liteparse")
     except Exception:  # noqa: BLE001
         lp = "?"
-    return {"cpu": cpu, "cores": os.cpu_count(), "ram": mem, "gpu": "none", "os": platform.platform(),
+    return {"cpu": cpu, "cores": os.cpu_count(), "ram": mem, "gpu": gpu, "os": platform.platform(),
             "python": platform.python_version(), "liteparse": lp, "date": time.strftime("%Y-%m-%d %H:%M")}

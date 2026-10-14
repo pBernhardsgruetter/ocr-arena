@@ -24,6 +24,20 @@ price_in_per_m = 0.5     # USD per 1M input tokens
 price_out_per_m = 1.5    # USD per 1M output tokens
 concurrency = 4
 
+# --- OpenRouter models: same engine type, key from the env var. extra_body is merged into the request,
+#     e.g. to switch reasoning off for a thinking model (otherwise it can burn max_tokens and return nothing).
+# [engines.or_mimo_v26_pro]
+# type = "openai_vlm"
+# label = "MiMo-V2.6-Pro (OpenRouter)"
+# base_url = "https://openrouter.ai/api/v1"
+# model = "xiaomi/mimo-v2.6-pro"
+# api_key_env = "OPENROUTER_API_KEY"
+# price_in_per_m = 0.435
+# price_out_per_m = 0.87
+# max_tokens = 16000
+# extra_body = { reasoning = { enabled = false } }
+# notes = "Reasoning disabled."
+
 # --- EasyOCR / PaddleOCR behind liteparse (start the servers from liteparse/ocr/) ---
 # [engines.liteparse_easyocr]
 # url = "http://localhost:8828/ocr"

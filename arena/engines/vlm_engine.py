@@ -36,7 +36,7 @@ class OpenAICompatVLM(Engine):
         return True, "ok"
 
     def _payload(self, b64):
-        return {"model": self.cfg["model"], "temperature": 0, "max_tokens": self.cfg.get("max_tokens", 4096),
+        return {**self.cfg.get("extra_body", {}), "model": self.cfg["model"], "temperature": 0, "max_tokens": self.cfg.get("max_tokens", 4096),
                 "messages": [{"role": "user", "content": [
                     {"type": "image_url", "image_url": {"url": f"data:image/png;base64,{b64}"}},
                     {"type": "text", "text": self.cfg.get("prompt", PROMPT)}]}]}

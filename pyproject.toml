@@ -5,7 +5,7 @@ description = "Benchmark arena for OCR engines on scanned documents"
 requires-python = ">=3.11"
 dependencies = [
   "pymupdf", "pillow", "numpy", "opencv-python-headless", "rapidfuzz",
-  "jinja2", "httpx", "liteparse", "pytest",
+  "jinja2", "httpx", "psutil", "liteparse", "pytest",
 ]
 
 [project.scripts]

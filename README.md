@@ -27,6 +27,12 @@ uv venv --python 3.12 .venv && uv pip install -e .   # once
 Add an engine: subclass `arena.engines.base.Engine` (`available()`, `run(pdf, n_pages) -> EngineResult`),
 register it in `arena/engines/registry.py`.
 
+KDL on Windows/WSL2 (benchmarked on an RTX A4000, 16 GB):
+```bash
+docker run -d --name kdl --gpus all --ipc=host -p 8000:8000 -v hf-cache:/root/.cache/huggingface vllm/vllm-openai:latest   --model KDLAI/KDL-Frontier-Parser-nano --trust-remote-code --limit-mm-per-prompt '{"image":1}' --max-model-len 8192
+```
+then `cp arena.toml.example arena.toml` (point `base_url` at `localhost:8000`) and `arena run --engines kdl_frontier_nano`.
+
 ## Metrics (see the report's *Method* section)
 CER/WER, fabricated-token rate, omission rate, wrong-number rate and digit near-misses, handwriting
 recall, table cell F1, reading order, sec/page, 500-page ETA, peak RAM, $/1k pages, failures.
