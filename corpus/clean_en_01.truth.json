@@ -1,0 +1,145 @@
+{
+ "id": "clean_en_01",
+ "profile": "clean",
+ "lang": "en",
+ "n_pages": 2,
+ "dpi": 200,
+ "degradation": "clean",
+ "pages": [
+  {
+   "page": 1,
+   "text": "Delivery note 5\nThe amount of 59,746.96 CHF must be transferred to account CH60 5927 7253 3251 1917 703 no later than 19.12.2025. Under reference RE-2026-945446 the payment was adequate on 10.03.2026. The amount of 10,377.89 CHF must be transferred to account CH28 8473 6199 5960 3165 693 no later than 27.06.2024. The amount of 7,129.79 CHF must be transferred to account CH53 8358 3606 6819 0501 997 no later than 09.05.2025.\nUnder reference RE-2025-226051 the contract was checked on 02.08.2026. The insurer requires the late deadline by 03.11.2026. The insurer confirms 22 payments in Winterthur. The insurer disputes the open handover by 26.09.2024. Under reference RE-2024-668138 the order was faulty on 23.11.2025.\nMr. Taylor confirms 9 orders in Chur. The site manager assumes the incomplete protocol by 25.02.2026. Under reference RE-2026-037106 the fee was incomplete on 03.08.2023. The insurer requires the adequate order by 03.10.2026. The amount of 46,723.46 CHF must be transferred to account CH11 8075 9529 7523 1930 960 no later than 22.09.2023.\nMs. Brown approves the adequate offer by 08.05.2024. The client assumes 35 invoices in Bern. Mr. Taylor assumes the adequate amendment by 17.09.2023. Under reference RE-2026-297285 the deadline was adequate on 19.11.2026. The amount of 25,226.19 CHF must be transferred to account CH66 7086 7295 6596 7587 685 no later than 05.06.2023. Mr. Taylor submits 5 claims in Düsseldorf.\nThe amount of 96,119.66 CHF must be transferred to account CH20 9632 6496 3457 8567 321 no later than 17.08.2026. Ms. Brown receives the confirmed payment by 07.08.2026. The site manager disputes 20 payments in Bern. The client requires the complete claim by 12.02.2024.\nThe landlord approves the confirmed account by 10.07.2026. Under reference RE-2025-406016 the document was incomplete on 19.09.2025. The site manager requires 29 applications in Basel.\nThe landlord confirms the incomplete application by 12.08.2023. Under reference RE-2023-898647 the document was complete on 13.03.2026. The company confirms the checked report by 11.05.2025. The amount of 41,845.88 CHF must be transferred to account CH82 5704 3742 3247 5627 016 no later than 20.08.2023.\nThe amount of 34,734.97 CHF must be transferred to account CH80 1435 3369 0808 3320 866 no later than 19.11.2023. Under reference RE-2024-900834 the fee was adequate on 16.06.2024. Mr. Taylor reviews 35 applications in Bern. The amount of 63,598.04 CHF must be transferred to account CH52 9340 0915 4560 1117 383 no later than 09.09.2024. Under reference RE-2024-732724 the contract was valid on 20.09.2026. The amount of 48,677.03 CHF must be transferred to account CH64 9943 0645 9349 2172 155 no later than 11.01.2025.",
+   "regions": [
+    {
+     "kind": "printed",
+     "text": "Delivery note 5"
+    },
+    {
+     "kind": "printed",
+     "text": "The amount of 59,746.96 CHF must be transferred to account CH60 5927 7253 3251 1917 703 no later than 19.12.2025. Under reference RE-2026-945446 the payment was adequate on 10.03.2026. The amount of 10,377.89 CHF must be transferred to account CH28 8473 6199 5960 3165 693 no later than 27.06.2024. The amount of 7,129.79 CHF must be transferred to account CH53 8358 3606 6819 0501 997 no later than 09.05.2025."
+    },
+    {
+     "kind": "printed",
+     "text": "Under reference RE-2025-226051 the contract was checked on 02.08.2026. The insurer requires the late deadline by 03.11.2026. The insurer confirms 22 payments in Winterthur. The insurer disputes the open handover by 26.09.2024. Under reference RE-2024-668138 the order was faulty on 23.11.2025."
+    },
+    {
+     "kind": "printed",
+     "text": "Mr. Taylor confirms 9 orders in Chur. The site manager assumes the incomplete protocol by 25.02.2026. Under reference RE-2026-037106 the fee was incomplete on 03.08.2023. The insurer requires the adequate order by 03.10.2026. The amount of 46,723.46 CHF must be transferred to account CH11 8075 9529 7523 1930 960 no later than 22.09.2023."
+    },
+    {
+     "kind": "printed",
+     "text": "Ms. Brown approves the adequate offer by 08.05.2024. The client assumes 35 invoices in Bern. Mr. Taylor assumes the adequate amendment by 17.09.2023. Under reference RE-2026-297285 the deadline was adequate on 19.11.2026. The amount of 25,226.19 CHF must be transferred to account CH66 7086 7295 6596 7587 685 no later than 05.06.2023. Mr. Taylor submits 5 claims in Düsseldorf."
+    },
+    {
+     "kind": "printed",
+     "text": "The amount of 96,119.66 CHF must be transferred to account CH20 9632 6496 3457 8567 321 no later than 17.08.2026. Ms. Brown receives the confirmed payment by 07.08.2026. The site manager disputes 20 payments in Bern. The client requires the complete claim by 12.02.2024."
+    },
+    {
+     "kind": "printed",
+     "text": "The landlord approves the confirmed account by 10.07.2026. Under reference RE-2025-406016 the document was incomplete on 19.09.2025. The site manager requires 29 applications in Basel."
+    },
+    {
+     "kind": "printed",
+     "text": "The landlord confirms the incomplete application by 12.08.2023. Under reference RE-2023-898647 the document was complete on 13.03.2026. The company confirms the checked report by 11.05.2025. The amount of 41,845.88 CHF must be transferred to account CH82 5704 3742 3247 5627 016 no later than 20.08.2023."
+    },
+    {
+     "kind": "printed",
+     "text": "The amount of 34,734.97 CHF must be transferred to account CH80 1435 3369 0808 3320 866 no later than 19.11.2023. Under reference RE-2024-900834 the fee was adequate on 16.06.2024. Mr. Taylor reviews 35 applications in Bern. The amount of 63,598.04 CHF must be transferred to account CH52 9340 0915 4560 1117 383 no later than 09.09.2024. Under reference RE-2024-732724 the contract was valid on 20.09.2026. The amount of 48,677.03 CHF must be transferred to account CH64 9943 0645 9349 2172 155 no later than 11.01.2025."
+    }
+   ],
+   "blank": false
+  },
+  {
+   "page": 2,
+   "text": "Contract terms 27\nThe finance department requires the valid offer by 16.07.2025. The insurer submits the confirmed contract by 21.02.2026. The insurer assumes 8 invoices in Bern.\nPos Description Qty Amount\n1 Freight 91 13,187.66\n2 Freight 5 17,773.68\n3 Expert opinion 66 74,436.56\n4 Expert opinion 118 87,120.42\nThe finance department requires the open payment by 07.10.2024. Under reference RE-2026-549815 the application was checked on 04.07.2023. Under reference RE-2024-818723 the report was adequate on 13.07.2024.\nNote:\nerledigt am 23.09.2025\nUnder reference RE-2024-722109 the invoice was incomplete on 19.09.2023. The client disputes 12 accounts in München. Under reference RE-2023-667184 the account was valid on 01.04.2026.\nThe company disputes 16 amendments in München. Under reference RE-2024-596220 the offer was incomplete on 17.04.2026. The insurer disputes 17 documents in Düsseldorf.\nThe landlord reviews 10 handovers in Düsseldorf. The site manager reviews 14 fees in Düsseldorf. Mr. Taylor disputes the faulty report by 08.10.2023.\nUnder reference RE-2024-329044 the invoice was valid on 26.01.2025. The amount of 32,763.41 CHF must be transferred to account CH69 7153 0780 9428 7718 877 no later than 27.07.2025. Mr. Taylor receives the confirmed report by 15.03.2026.\nUnder reference RE-2026-893866 the claim was checked on 24.12.2024. Mr. Taylor assumes 39 handovers in Zürich. The site manager assumes the open contract by 15.11.2024.",
+   "regions": [
+    {
+     "kind": "printed",
+     "text": "Contract terms 27"
+    },
+    {
+     "kind": "printed",
+     "text": "The finance department requires the valid offer by 16.07.2025. The insurer submits the confirmed contract by 21.02.2026. The insurer assumes 8 invoices in Bern."
+    },
+    {
+     "kind": "table",
+     "rows": [
+      [
+       "Pos",
+       "Description",
+       "Qty",
+       "Amount"
+      ],
+      [
+       "1",
+       "Freight",
+       "91",
+       "13,187.66"
+      ],
+      [
+       "2",
+       "Freight",
+       "5",
+       "17,773.68"
+      ],
+      [
+       "3",
+       "Expert opinion",
+       "66",
+       "74,436.56"
+      ],
+      [
+       "4",
+       "Expert opinion",
+       "118",
+       "87,120.42"
+      ]
+     ],
+     "text": "Pos Description Qty Amount\n1 Freight 91 13,187.66\n2 Freight 5 17,773.68\n3 Expert opinion 66 74,436.56\n4 Expert opinion 118 87,120.42"
+    },
+    {
+     "kind": "image",
+     "text": ""
+    },
+    {
+     "kind": "printed",
+     "text": "The finance department requires the open payment by 07.10.2024. Under reference RE-2026-549815 the application was checked on 04.07.2023. Under reference RE-2024-818723 the report was adequate on 13.07.2024."
+    },
+    {
+     "kind": "printed",
+     "text": "Note:"
+    },
+    {
+     "kind": "handwritten",
+     "text": "erledigt am 23.09.2025"
+    },
+    {
+     "kind": "printed",
+     "text": "Under reference RE-2024-722109 the invoice was incomplete on 19.09.2023. The client disputes 12 accounts in München. Under reference RE-2023-667184 the account was valid on 01.04.2026."
+    },
+    {
+     "kind": "printed",
+     "text": "The company disputes 16 amendments in München. Under reference RE-2024-596220 the offer was incomplete on 17.04.2026. The insurer disputes 17 documents in Düsseldorf."
+    },
+    {
+     "kind": "printed",
+     "text": "The landlord reviews 10 handovers in Düsseldorf. The site manager reviews 14 fees in Düsseldorf. Mr. Taylor disputes the faulty report by 08.10.2023."
+    },
+    {
+     "kind": "printed",
+     "text": "Under reference RE-2024-329044 the invoice was valid on 26.01.2025. The amount of 32,763.41 CHF must be transferred to account CH69 7153 0780 9428 7718 877 no later than 27.07.2025. Mr. Taylor receives the confirmed report by 15.03.2026."
+    },
+    {
+     "kind": "printed",
+     "text": "Under reference RE-2026-893866 the claim was checked on 24.12.2024. Mr. Taylor assumes 39 handovers in Zürich. The site manager assumes the open contract by 15.11.2024."
+    }
+   ],
+   "blank": false
+  }
+ ],
+ "fonts": {
+  "printed": "arial.ttf",
+  "handwriting": "Inkfree.ttf"
+ },
+ "synthetic": true
+}
